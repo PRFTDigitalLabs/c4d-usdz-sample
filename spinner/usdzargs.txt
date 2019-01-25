@@ -1,0 +1,4 @@
+-g bar -ao_map ./baked/barAmbient_Occlusion.png -normal_map ./baked/barNormal.png -color_map ./baked/barSurface_Color.png -metallic_map ./baked/barMetallic.png -roughness_map ./baked/barRoughness.png
+-g bracket -color_map ./baked/bracketSurface_Color.png -metallic_map ./baked/bracketMetallic.png -roughness_map ./baked/bracketRoughness.png
+-g switch -ao_map ./baked/switchAmbient_Occlusion.png -normal_map ./baked/switchNormal.png -color_map ./baked/switchSurface_Color.png -metallic_map ./baked/switchMetallic.png -roughness_map ./baked/switchRoughness.png
+-g target -color_map ./baked/targetSurface_Color.png -metallic_map ./baked/targetMetallic.png -roughness_map ./baked/targetRoughness.png

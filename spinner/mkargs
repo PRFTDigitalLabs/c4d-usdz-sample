@@ -1,0 +1,81 @@
+#!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+ROOT=.
+BAKED=baked
+declare -a groups
+declare -a channels=("Ambient_Occlusion.png" "Normal.png" "Surface_Color.png" "Metallic.png" "Roughness.png")
+declare -a params=("-ao_map" "-normal_map" "-color_map" "-metallic_map" "-roughness_map")
+
+if test -z "$1"; then
+    echo -e "🗣  No default file such as ${RED}./abc/file.abc${NC} was passed, searching for the newest .abc file in ${RED}./abc${NC} ..."
+
+    abc=$(ls ./abc/*.abc | head -n1)
+else
+    abc=$1
+fi
+
+if [ -f $abc ]; then
+    echo -e "found: ${RED}$abc${NC}"
+    usdz=$(basename "$abc" .abc)
+    usdz+=".usdz"
+else
+    echo -e "👻  .abc file not found. Export an .abc file into the ./abc folder first."
+    exit 1
+fi
+
+echo -e "🔎  Searching for baked c4d textures in ${RED}./baked${NC} ... "
+
+for file in $ROOT/$BAKED/*.png; do
+    for channel in "${channels[@]}"; do
+        if [[ $file == *"$channel"* ]]
+        then
+            group=${file#"$ROOT/$BAKED/"}
+            group=${group%"$channel"}
+
+            if [[ ! " ${groups[@]} " =~ " ${group} " ]]; then
+                groups+=($group)
+            fi
+            break
+        fi
+    done
+done
+
+> usdzargs.txt
+
+#every group
+for group in "${groups[@]}"; do
+    arg="-g $group"
+    #check for a file for every channel
+    for channel in "${channels[@]}"; do
+        file=$ROOT/$BAKED/$group$channel
+        if [ -f $file ]; then
+            #echo "found $file"
+            #get the corresponding param
+            for i in "${!channels[@]}"; do
+                if [[ "${channels[$i]}" = "${channel}" ]]; then
+                    p="${params[i]}"
+                fi
+            done
+
+            if test -z "$p"
+            then
+                echo "no parameter found."
+            else
+                arg+=" $p $file"
+            fi
+        fi
+    done
+    echo "$arg"
+    echo $arg >> usdzargs.txt
+done
+
+
+echo -e "✅  Done."
+echo -e "🤖  Create USDZ with: ${RED}'xcrun usdz_converter $abc ../docs/usdz/$usdz -f ./usdzargs.txt'${NC} ? (y/n)"
+read -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    eval mkdir -p "usdz"
+    eval "xcrun usdz_converter $abc ../docs/usdz/$usdz -f usdzargs.txt"
+fi
