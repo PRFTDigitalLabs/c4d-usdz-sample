@@ -33,7 +33,7 @@ To create [a USDZ file](https://github.com/PixarAnimationStudios/USD), I convert
 
 ## Goals of this exercise:
 
-For a more in-depth exploration of this process, please view my blog post here: (https://blog.truthlabs.com).
+For a more in-depth exploration of this process, please view my blog post here: (https://blog.truthlabs.com/adventures-in-3d-streamlining-the-conversion-of-assets-for-ios-quicklook-and-usdz-icloud-bash-240cf569b05f).
 
 ### Utilize Cinema 4d as a source for USDZ files.
  - [x] Geometry
